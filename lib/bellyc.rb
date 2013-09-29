@@ -1,8 +1,8 @@
 require 'bellyc/version.rb'
-require 'bellyc/crawler'
-require 'bellyc/checkin'
-require 'bellyc/parser'
-require 'bellyc/csv_export'
+require 'bellyc/crawler.rb'
+require 'bellyc/checkin.rb'
+require 'bellyc/parser.rb'
+require 'bellyc/csv_export.rb'
 require 'ruby-progressbar'
 
 # Add requires for other files you add to your project here, so
