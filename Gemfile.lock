@@ -1,16 +1,12 @@
-GIT
-  remote: https://github.com/datamapper/dm-core
-  revision: 7cc4c145329e81d8b373a37694d050aa197c3699
-  branch: release-1.2
-  specs:
-    dm-core (1.2.1)
-      addressable (~> 2.3, >= 2.3.5)
-
 PATH
   remote: .
   specs:
     bellyc (0.0.1)
+      data_mapper (= 1.2.0)
+      dm-postgres-adapter (= 1.2.0)
       gli (= 2.8.0)
+      mechanize (= 2.7.2)
+      ruby-progressbar (= 1.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -49,6 +45,8 @@ GEM
       dm-core (~> 1.2.0)
     dm-constraints (1.2.0)
       dm-core (~> 1.2.0)
+    dm-core (1.2.1)
+      addressable (~> 2.3)
     dm-do-adapter (1.2.0)
       data_objects (~> 0.10.6)
       dm-core (~> 1.2.0)
@@ -138,13 +136,8 @@ PLATFORMS
 DEPENDENCIES
   aruba
   bellyc!
-  data_mapper
-  dm-core!
-  dm-postgres-adapter
-  mechanize
   rake
   rdoc
   rspec
-  ruby-progressbar
   vcr
   webmock

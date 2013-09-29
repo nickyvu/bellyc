@@ -1,10 +1,5 @@
 source 'https://rubygems.org'
-gem 'data_mapper'
-gem 'mechanize'
-gem 'dm-core', :git => 'https://github.com/datamapper/dm-core', :branch => 'release-1.2'
 gem 'rspec'
 gem 'vcr'
 gem 'webmock'
-gem 'dm-postgres-adapter'
-gem 'ruby-progressbar'
 gemspec
