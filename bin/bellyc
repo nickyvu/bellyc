@@ -23,23 +23,26 @@ default_value 'the default'
 arg_name 'The name of the argument'
 flag [:f,:flagname]
 
-desc 'Describe crawl here'
-arg_name 'Describe arguments to crawl here'
+desc 'Access Belly Website and Download Checkin Data'
 command :crawl do |c|
   c.desc 'Describe a switch to crawl'
   c.switch :s
 
-  c.desc 'Describe a flag to crawl'
-  c.default_value 'default'
-  c.flag :f
+  c.desc 'username'
+  c.flag [ :u, :username ]
+
+  c.desc 'password'
+  c.flag [ :p, :password ]
+
   c.action do |global_options,options,args|
 
-    # Your command logic here
-     
-    # If you have any errors, just raise them
-    # raise "that command made no sense"
+    username = options[:u]
+    password = options[:p]
+    url = "https://www.bellycard.com/admin/sign_in"
 
-    puts "crawl command ran"
+    Crawler.new(url, username, password).run
+
+    puts "finished crawling"
   end
 end
 
