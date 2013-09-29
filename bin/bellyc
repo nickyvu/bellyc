@@ -25,8 +25,8 @@ flag [:f,:flagname]
 
 desc 'Access Belly Website and Download Checkin Data'
 command :crawl do |c|
-  c.desc 'Describe a switch to crawl'
-  c.switch :s
+  c.desc 'ignore duplicate limit'
+  c.switch [ :i, "ignore-duplicates" ]
 
   c.desc 'username'
   c.flag [ :u, :username ]
@@ -40,7 +40,7 @@ command :crawl do |c|
     password = options[:p]
     url = "https://www.bellycard.com/admin/sign_in"
 
-    Crawler.new(url, username, password).run
+    Crawler.new(url, username, password).run(options[:i])
 
     puts "finished crawling"
   end

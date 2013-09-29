@@ -16,11 +16,13 @@ class Crawler
     @duplicate_checkins = 0
 	end
 
-  def run
+  def run(ignore_dup=false)
     page = Parser.new(login)
     loop do
       scrape(page)
-      break if @duplicate_checkins >= 60
+      unless ignore_dup
+        break if @duplicate_checkins >= 60
+      end
       page = go_to_next(page)
     end
   end
