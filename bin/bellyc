@@ -46,19 +46,117 @@ command :crawl do |c|
   end
 end
 
-desc 'Describe report here'
-arg_name 'Describe arguments to report here'
+desc 'Display number of new and repeat customers for a given range of dates'
+arg_name 'locations'
 command :report do |c|
+  c.desc 'start_date (format yyyy-mm-dd)'
+  c.default_value (Date.today - 7).strftime("%Y-%m-%d")
+  c.flag [ :s, :start_date ]
+
+  c.desc 'end_date (format yyyy-mm-dd)'
+  c.default_value (Date.today).strftime("%Y-%m-%d")
+  c.flag [ :e, :end_date ]
+
   c.action do |global_options,options,args|
+    if args.empty?
+      locations = [15050, 15080, 15051, 15052, 15081, 16826]
+    else
+      locations = args
+    end
+
+    start_date = Date.parse(options[:s])
+    end_date = Date.parse(options[:e])
+
+
+    locations.each do |location|
+      checkins = Checkin.all(:created_at.gte => start_date, :created_at.lt => end_date, :location => location)
+      users = checkins.map{|c| c.user}.uniq
+
+      new_customers = 0
+      repeat_two_week = 0
+      repeat_one_week = 0
+      repeat_one_month = 0
+
+      progressbar = ProgressBar.create(:format => '%t %a %B %p%%', :total => users.size)
+
+      users.each do |user|
+        user_checkins = Checkin.all(:user => user)
+        dates = user_checkins.map{|c| Date.new(c.created_at.year, c.created_at.month, c.created_at.day)}.uniq
+        dates.sort!
+      if dates[0] >= start_date && dates[0] < end_date
+        new_customers += 1
+      repeat_two_week += 1 if dates[1] && dates[1] - dates[0] < 14
+      repeat_one_week += 1 if dates[1] && dates[1] - dates[0] < 7
+      repeat_one_month +=1 if dates[1] && dates[1] - dates[0] < 30
+      end
+      progressbar.increment
+      end
+
+      puts "Location: #{location}"
+      puts "# of total customers: #{users.count}"
+      puts "# of new customers: #{new_customers}"
+      puts "# of repeat customers in one week: #{repeat_one_week}"
+      puts "# of repeat customers in two weeks: #{repeat_two_week}"
+      puts "# of repeat customers in one month: #{repeat_one_month}"
     puts "report command ran"
+    end
   end
 end
 
-desc 'Describe export here'
-arg_name 'Describe arguments to export here'
+desc 'Export to CSV matrix report'
+arg_name 'Filename'
 command :export do |c|
+  c.desc 'Start Date'
+  c.flag [ :s, :start_date ]
+
+  c.desc 'End Date'
+  c.flag [ :e, :end_date ]
+
+
   c.action do |global_options,options,args|
-    puts "export command ran"
+    
+    start_date = Date.parse(options[:s])
+    end_date = Date.parse(options[:e])
+    if args
+      filename = args[0]
+    else
+      filename = "report.csv"
+    end
+
+    checkins = Checkin.all(:created_at => start_date..end_date)
+    users = checkins.map{|c| c.user}.uniq
+    visits = {}
+    progressbar1 = ProgressBar.create(:format => '%t %a %B %p%%', :total => users.size)
+    puts "Compiling Users..."
+    users.each do |user|
+      checkins_for_user = checkins.select{|c| c.user == user}
+      dates_of_checkins = checkins_for_user.map{|c| Date.new(c.created_at.year, c.created_at.month, c.created_at.day)}.uniq
+      dates_of_checkins.sort!
+      visits[user] = dates_of_checkins
+      progressbar1.increment
+    end
+
+    def first_visit?(user, start_date, end_date)
+      visits = Checkin.all(:user => user).map { |c| c.created_at }.uniq.sort
+        visits[0] >= start_date && visits[0] <= end_date ? 1 : 0
+    end
+
+    def first_visit_date(user)
+      visits = Checkin.all(:user => user).map { |c| c.created_at }.uniq.sort
+      visits[0].strftime('%Y-%m-%d')
+    end
+
+    CSV.open(filename , "w") do |csv|
+      puts "Generating CSV:"
+      progressbar = ProgressBar.create(:format => '%t %a %B %p%%', :total => users.size)
+      csv << ["Username", "First Visit Date"] + (start_date..end_date).map{|d| d.strftime("%b-%d")}
+      users.each do |user|
+        date_range = (start_date..end_date).map{|d| d}
+        boolean_array = date_range.map{|d| visits[user].include?(d) ? 1: 0}
+        csv << [user] + [first_visit_date(user)] +  boolean_array
+      progressbar.increment
+      end
+    end
   end
 end
 
