@@ -2,6 +2,7 @@ require 'bellyc/version.rb'
 require 'bellyc/crawler'
 require 'bellyc/checkin'
 require 'bellyc/parser'
+require 'bellyc/csv_export'
 require 'ruby-progressbar'
 
 # Add requires for other files you add to your project here, so
