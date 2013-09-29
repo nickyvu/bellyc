@@ -12,6 +12,10 @@ spec = Gem::Specification.new do |s|
   s.files = %w(
 bin/bellyc
 lib/bellyc/version.rb
+lib/bellyc/crawler.rb
+lib/bellyc/checkin.rb
+lib/bellyc/parser.rb
+lib/bellyc/csv_export.rb
 lib/bellyc.rb
   )
   s.require_paths << 'lib'
