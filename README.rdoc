@@ -1,0 +1,6 @@
+= bellyc
+
+Describe your project here
+
+:include:bellyc.rdoc
+
