@@ -1,18 +1,23 @@
 class CSVExport
-  attr_reader :start_date, :end_date, :filename
+  attr_reader :start_date, :end_date, :filename, :checkins, :users, :visits
 
   def initialize(start_date, end_date, filename)
     @start_date = start_date
     @end_date = end_date
     @filename = filename
+    @checkins = Checkin.all(:created_at => start_date..end_date)
+    @users = @checkins.map{|c| c.user}.uniq
+    @visits = {}
   end
 
   def run
-    checkins = Checkin.all(:created_at => start_date..end_date)
-    users = checkins.map{|c| c.user}.uniq
-    visits = {}
-    progressbar1 = ProgressBar.create(:format => '%t %a %B %p%%', :total => users.size)
     puts "Compiling Users..."
+    get_user_visits
+    generate_csv
+  end
+
+  def get_user_visits
+    progressbar1 = ProgressBar.create(:format => '%t %a %B %p%%', :total => users.size)
     users.each do |user|
       checkins_for_user = checkins.select{|c| c.user == user}
       dates_of_checkins = checkins_for_user.map{|c| Date.new(c.created_at.year, c.created_at.month, c.created_at.day)}.uniq
@@ -20,6 +25,9 @@ class CSVExport
       visits[user] = dates_of_checkins
       progressbar1.increment
     end
+  end
+
+  def generate_csv
     CSV.open(filename , "w") do |csv|
       puts "Generating CSV:"
       progressbar = ProgressBar.create(:format => '%t %a %B %p%%', :total => users.size)
