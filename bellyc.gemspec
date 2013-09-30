@@ -15,6 +15,7 @@ lib/bellyc/version.rb
 lib/bellyc/crawler.rb
 lib/bellyc/checkin.rb
 lib/bellyc/parser.rb
+lib/bellyc/report.rb
 lib/bellyc/csv_export.rb
 lib/bellyc.rb
   )
