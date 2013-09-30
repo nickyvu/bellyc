@@ -1,4 +1,5 @@
 require 'bellyc/version.rb'
+require 'bellyc/config.rb'
 require 'bellyc/crawler.rb'
 require 'bellyc/checkin.rb'
 require 'bellyc/parser.rb'
