@@ -62,7 +62,8 @@ command :report do |c|
 
     Report.new(start_date, end_date, locations).run
 
-    puts "report command ran"
+    puts "Report finished for locations: #{ locations }"
+    puts "From: #{ options[:s] } To: #{ options[:e] }"
   end
 end
 
