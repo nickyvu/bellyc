@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
   s.files = %w(
 bin/bellyc
 lib/bellyc/version.rb
-lib/bellyc/config.rg
+lib/bellyc/config.rb
 lib/bellyc/crawler.rb
 lib/bellyc/checkin.rb
 lib/bellyc/parser.rb
