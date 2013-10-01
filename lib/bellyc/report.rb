@@ -23,13 +23,13 @@ class Report
         user_checkins = Checkin.all(:user => user)
         dates = user_checkins.map{|c| Date.new(c.created_at.year, c.created_at.month, c.created_at.day)}.uniq
         dates.sort!
-      if dates[0] >= start_date && dates[0] < end_date
-        new_customers += 1
-      repeat_two_week += 1 if dates[1] && dates[1] - dates[0] < 14
-      repeat_one_week += 1 if dates[1] && dates[1] - dates[0] < 7
-      repeat_one_month +=1 if dates[1] && dates[1] - dates[0] < 30
-      end
-      progressbar.increment
+        if dates[0] >= start_date && dates[0] < end_date
+          new_customers += 1
+          repeat_two_week += 1 if dates[1] && dates[1] - dates[0] < 14
+          repeat_one_week += 1 if dates[1] && dates[1] - dates[0] < 7
+          repeat_one_month +=1 if dates[1] && dates[1] - dates[0] < 30
+        end
+        progressbar.increment
       end
 
       puts "Location: #{location}"

@@ -36,14 +36,14 @@ class CSVExport
         date_range = (start_date..end_date).map{|d| d}
         boolean_array = date_range.map{|d| visits[user].include?(d) ? 1: 0}
         csv << [user] + [first_visit_date(user)] +  boolean_array
-      progressbar.increment
+        progressbar.increment
       end
     end
   end
-  
+
   def first_visit?(user, start_date, end_date)
     visits = Checkin.all(:user => user).map { |c| c.created_at }.uniq.sort
-      visits[0] >= start_date && visits[0] <= end_date ? 1 : 0
+    visits[0] >= start_date && visits[0] <= end_date ? 1 : 0
   end
 
   def first_visit_date(user)
